@@ -41,3 +41,4 @@ module.exports = {
     return queryInterface.dropTable('PostTags');
   }
 };
+

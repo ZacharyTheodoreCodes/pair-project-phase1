@@ -12,13 +12,13 @@ module.exports = {
      *   isBetaMember: false
      * }], {});
     */
-    let data = fs.readFileSync('./data/profiles.json', 'utf-8')
+    let data = fs.readFileSync('./data/users.json', 'utf-8')
     data = JSON.parse(data)  
     data.forEach(el =>{
       delete el.id
       el.createdAt =  el.updatedAt = new Date()
     })
-   return queryInterface.bulkInsert("Profiles",data)
+   return queryInterface.bulkInsert("Users",data)
   },
 
    down (queryInterface, Sequelize) {
@@ -28,7 +28,12 @@ module.exports = {
      * Example:
      * await queryInterface.bulkDelete('People', null, {});
      */
-    return queryInterface.bulkDelete('Profiles', null, {});
+    let data = fs.readFileSync('users.json', 'utf-8')
+    data = JSON.parse(data)  
+    data.forEach(el =>{
+      delete el.id
+      el.createdAt =  el.updatedAt = new Date()
+    })
+   return queryInterface.bulkInsert("Users",data)
   }
 };
-
