@@ -7,7 +7,7 @@ class Controller{
         Profile.findAll(option)
         .then((profileData) => {
             profileData.forEach( data => {
-                //console.log(data.gender);
+                // console.log(data.dataValues);
                 data.dataValues.fullName = data.fullName
                 data.dataValues.genderPronoun = Profile.genderPronoun(data.dataValues.gender)
                 data.dataValues.hiddenPhoneNumber = data.hiddenPhoneNumber()
@@ -28,8 +28,9 @@ class Controller{
         .then((profileData) => {
             profileData.dataValues.fullName = profileData.fullName
             profileData.dataValues.genderPronoun = Profile.genderPronoun(profileData.dataValues.gender)
-            res.send(profileData)
-            //res.render("showProfilePost",{profileData})
+            let gender = profileData.dataValues.genderPronoun
+            // res.send(profileData)
+            res.render("showProfilePost",{profileData, gender})
         })
         .catch((err) => {
             res.send(err)
