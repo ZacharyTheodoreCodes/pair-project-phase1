@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
+    <style>
+        table, th, td {
+          border:1px solid black;
+        }
+        </style>
 </head>
 <body>
     <pre><%= JSON.stringify(profileData,null,4) %></pre>
@@ -25,12 +30,16 @@
                     <img src="<%=post.imgUrl%>" alt="img">
                 </td>
                 <td><%=post.caption%></td>
-                <td><%=post.createdAt%></td>
-                <td><%=post.tags%></td>
+                <td><%=formatPublished(post.createdAt)%></td>
                 <td>
-                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/edit">Add Tag</a>
-                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/edit">Edit</a>
-                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/delete">Delete</a>
+                 <% post.Tags.forEach( tag => { %>
+                        <button><%=tag.name%></button>
+                 <% }) %>
+                </td>
+                <td>
+                    <a href="/profiles/<%=profileData.id%>/posts/<%=post.id%>/tags/add">Add Tag</a>
+                    <a href="/profiles/<%=profileData.id%>/posts/<%=post.id%>/edit">Edit</a>
+                    <a href="/profiles/<%=profileData.id%>/posts/<%=post.id%>/delete">Delete</a>
                 </td>
             </tr>
             <% }); %>

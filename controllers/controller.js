@@ -1,5 +1,6 @@
 const { Profile,Post,Tag,User } = require("../models")
 const { Op } = require("sequelize")
+const formatPublished = require('../helpers/formatPublished')
 
 class Controller{
     static showAllProfile(req,res){
@@ -28,8 +29,8 @@ class Controller{
         .then((profileData) => {
             profileData.dataValues.fullName = profileData.fullName
             profileData.dataValues.genderPronoun = Profile.genderPronoun(profileData.dataValues.gender)
-            res.send(profileData)
-            //res.render("showProfilePost",{profileData})
+            //res.send(profileData)
+            res.render("showProfilePost",{profileData, formatPublished})
         })
         .catch((err) => {
             res.send(err)
@@ -37,11 +38,35 @@ class Controller{
     }
 
     static addPost(req,res){
-        
+        // const { profileId } = req.params;
+        // let option = {
+        //     where: {id: +profileId}
+        // }
+        // Profile.findOne(option)
+        // .then((result) => {
+        //     res.render("addPost",{result})
+        // })
+        // .catch((err) => {
+        //     console.log(err);
+        //     res.send(err)
+        // })
+        res.render("addPost")
     }
 
     static createPost(req,res){
-        
+        const { profileId } = req.params;
+        const { imgUrl,caption } = req.body;
+        // let option = {
+        //     where: {id: +profileId}
+        // }
+        Profile.create({ imgUrl,caption,ProfileId : +profileId })
+        .then((result) => {
+            res.redirect(`/stores/${profileId}`)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err)
+        })
     }
 
     static editPostForm(req,res){
@@ -52,12 +77,27 @@ class Controller{
         
     }
 
+    // router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTags)
     static addTags(req,res){
-        
+        //bisa tampilin image & captionnya di sini 
+        res.render("addTag")
     }
 
     static createTags(req,res){
-        
+        const { profileId,postId } = req.params;
+        const { ...name } = req.body
+        const { name1,name2 } = name
+        Post.findByPk(+postId)
+        .then((result) => {
+            return Tag.create({ name1,name2 })
+        })
+        .then((result) => {
+            res.redirect(`/profiles/${+profileId}`)
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err)
+        })
     }
 
     static deletePost(req,res){
