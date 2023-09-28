@@ -3,9 +3,14 @@ const { Op } = require("sequelize")
 const formatPublished = require('../helpers/formatPublished')
 
 class Controller{
+    static kingsLanding(req, res){
+        res.render('homepage', {"title": "iScape"})
+    }
+
     static showAllProfile(req,res){
+        const id = req.session.UserId
         const { firstName, lastName } = req.query
-        let option = {}
+        let option = {include: User}
         if (firstName || lastName){
             option.where = {
                 firstName: {
@@ -23,9 +28,14 @@ class Controller{
                 data.dataValues.fullName = data.fullName
                 data.dataValues.genderPronoun = Profile.genderPronoun(data.dataValues.gender)
                 data.dataValues.hiddenPhoneNumber = data.hiddenPhoneNumber()
+                if(data.dataValues.genderPronoun === "Mr"){
+                    data.dataValues.icon = "https://static.vecteezy.com/system/resources/thumbnails/002/002/403/small/man-with-beard-avatar-character-isolated-icon-free-vector.jpg"
+                }else{
+                    data.dataValues.icon = "https://media.istockphoto.com/id/1331335536/vector/female-avatar-icon.jpg?s=170667a&w=0&k=20&c=-iyD_53ZEeZPc4SmvmGB1FJXZcHy_fvbJBv6O8HblHs="
+                }
 
             });
-            res.send(profileData)
+             res.render('showAllProfiles', {profileData,id})
         })
         .catch((err) => {
             res.send(err)
@@ -33,13 +43,26 @@ class Controller{
     }
 
     static editProfileForm(req,res){
-        res.render("editProfileForm")
+        const id = req.session.UserId
+        Profile.findOne({
+            include: User,
+            where: {
+                UserId: id
+            }
+        })
+            .then((profile) => {
+                res.render('editprofile', { profile })
+            })
+            .catch((err) => {
+                console.log(err)
+            })
     }
 
     static updateProfile(req,res){
-        const { profileId } = req.params
+        const id = req.session.UserId
+        //const { profileId } = req.params
         const { firstName, lastName, phone, gender } = req.body
-        Profile.update({ firstName, lastName, phone, gender }, { where: {id: +profileId}})
+        Profile.update({ firstName, lastName, phone, gender }, { where: {UserId: +id}})
         .then((result) => {
             res.redirect(`/profiles`);
         })
@@ -50,6 +73,7 @@ class Controller{
     }
     
     static showProfilePost(req,res){
+        const id = req.session.UserId
         const {profileId} = req.params;
         let option = {include: [{ model : Post , include: Tag}] }
         option.where = { id : +profileId}
@@ -58,9 +82,10 @@ class Controller{
             profileData.dataValues.fullName = profileData.fullName
             profileData.dataValues.genderPronoun = Profile.genderPronoun(profileData.dataValues.gender)
             //res.send(profileData)
-            res.render("showProfilePost",{profileData, formatPublished})
+            res.render("showProfilePost",{profileData, formatPublished, id})
         })
         .catch((err) => {
+            console.log(err);
             res.send(err)
         })
     }
@@ -84,7 +109,7 @@ class Controller{
     static createPost(req,res){
         const { profileId } = req.params;
         const { imgUrl,caption } = req.body;
-        Profile.create({ imgUrl,caption,ProfileId : +profileId })
+        Post.create({ imgUrl,caption,ProfileId : +profileId })
         .then((result) => {
             res.redirect(`/profiles/${profileId}`)
         })
@@ -147,10 +172,15 @@ class Controller{
     }
 
     static deletePost(req,res){
-        const { profileId,postId } = req.params;
-        Post.destroy({ where: { id: +postId } })
-        .then ((result) => {
-            res.redirect(`/profiles/${+profileId}`)
+        const { profileId, postId } = req.params;
+        let foundPost;
+        Post.findByPk(+postId)
+        .then((post) => {
+            foundPost = post;
+            return foundPost.setTags([]).then(() => foundPost.destroy());
+        })
+        .then(() => {
+            res.redirect(`/profiles/${+profileId}`);
         })
         .catch((err) => {
             console.log(err);

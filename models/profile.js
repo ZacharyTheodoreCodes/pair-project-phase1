@@ -35,7 +35,6 @@ module.exports = (sequelize, DataTypes) => {
         const rest = this.phone.slice(3).replace(/\d/g, '*');
         return `${countryCode}${rest}`;
     }
-
   }
   Profile.init({
     firstName: DataTypes.STRING,

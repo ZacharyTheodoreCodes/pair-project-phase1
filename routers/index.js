@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Controller = require('../controllers/controller')
+const UserController = require('../controllers/UserController')
 
 // middleware that is specific to this router
 
@@ -9,13 +10,36 @@ const Controller = require('../controllers/controller')
 //   next()
 // })
 // // define the home page route
-router.get('/', (req, res) => {
-  res.send('Birds home page')
-})
+// router.get('/', (req, res) => {
+//   res.send('Birds home page')
+// })
 // // define the about route
 // router.get('/about', (req, res) => {
 //   res.send('About birds')
 // })
+
+router.get('/', Controller.kingsLanding)
+
+router.get('/register', UserController.registerForm)
+router.post('/register', UserController.registerPost)
+
+router.get('/login', UserController.loginForm)
+router.post('/login', UserController.loginPost)
+
+router.get('/logout', UserController.getlogout)
+
+
+router.use(function(req, res, next){
+  console.log(req.session)
+  if(!req.session.UserId){
+      const error = 'You are not logged in!'
+      res.redirect(`/login?error=${error}`)
+  } else{
+      next()
+  }
+})
+
+
 
 router.get('/profiles', Controller.showAllProfile)
 router.get('/profiles/:profileId', Controller.showProfilePost)
@@ -29,14 +53,6 @@ router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTagsForm
 router.post('/profiles/:profileId/posts/:postId/tags/add', Controller.createTags)
 router.get('/profiles/:profileId/posts/:postId/delete', Controller.deletePost)
 
-/**
- * 
- * 
- * opsi lain -> edit profile kayanya ga seribet edit post
- * get /profiles/:profileId/edit controller.editProfileForm
- * post /profiles/:profileId/edit controller.updateProfile
- * 
- * 
- */
+
 
 module.exports = router
