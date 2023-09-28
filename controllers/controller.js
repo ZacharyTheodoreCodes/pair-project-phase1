@@ -4,7 +4,18 @@ const formatPublished = require('../helpers/formatPublished')
 
 class Controller{
     static showAllProfile(req,res){
+        const { firstName, lastName } = req.query
         let option = {}
+        if (firstName || lastName){
+            option.where = {
+                firstName: {
+                    [Op.iLike]: `%${firstName}%`,
+                },
+                lastName: {
+                    [Op.iLike]: `%${lastName}%`,
+                },
+            }
+        }
         Profile.findAll(option)
         .then((profileData) => {
             profileData.forEach( data => {
@@ -21,6 +32,23 @@ class Controller{
         })
     }
 
+    static editProfileForm(req,res){
+        res.render("editProfileForm")
+    }
+
+    static updateProfile(req,res){
+        const { profileId } = req.params
+        const { firstName, lastName, phone, gender } = req.body
+        Profile.update({ firstName, lastName, phone, gender }, { where: {id: +profileId}})
+        .then((result) => {
+            res.redirect(`/profiles`);
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err)
+        })
+    }
+    
     static showProfilePost(req,res){
         const {profileId} = req.params;
         let option = {include: [{ model : Post , include: Tag}] }
@@ -37,31 +65,51 @@ class Controller{
         })
     }
 
-    static addPost(req,res){
-        // const { profileId } = req.params;
-        // let option = {
-        //     where: {id: +profileId}
-        // }
-        // Profile.findOne(option)
-        // .then((result) => {
-        //     res.render("addPost",{result})
-        // })
-        // .catch((err) => {
-        //     console.log(err);
-        //     res.send(err)
-        // })
-        res.render("addPost")
+    static addPostForm(req,res){
+        const { errors } = req.query;
+        const { profileId } = req.params;
+        let option = {
+            where: {id: +profileId}
+        }
+        Profile.findOne(option)
+        .then((result) => {
+            res.render("addPost",{result, errors})
+        })
+        .catch((err) => {
+            console.log(err);
+            res.send(err)
+        })
     }
 
     static createPost(req,res){
         const { profileId } = req.params;
         const { imgUrl,caption } = req.body;
-        // let option = {
-        //     where: {id: +profileId}
-        // }
         Profile.create({ imgUrl,caption,ProfileId : +profileId })
         .then((result) => {
-            res.redirect(`/stores/${profileId}`)
+            res.redirect(`/profiles/${profileId}`)
+        })
+        .catch((err) => {
+            if (err.name === "SequelizeValidationError") {
+                err = err.errors.map((el) => {
+                    return el.message
+                })
+                res.redirect(`/profiles/${profileId}/posts/add?errors=${err.join(';')}`)
+            }else{
+                //console.log(err);
+                res.send(err)
+            }
+        })
+    }
+
+    static addTagsForm(req,res){
+        const { errors } = req.query;
+        const { postId } = req.params;
+        let option = {
+            where: {id: +postId}
+        }
+        Post.findOne(option)
+        .then((result) => {
+            res.render("addTag",{result , errors})
         })
         .catch((err) => {
             console.log(err);
@@ -69,50 +117,47 @@ class Controller{
         })
     }
 
-    static editPostForm(req,res){
-        
-    }
-
-    static updatePost(req,res){
-        
-    }
-
-    // router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTags)
-    static addTags(req,res){
-        //bisa tampilin image & captionnya di sini 
-        res.render("addTag")
-    }
-
     static createTags(req,res){
-        const { profileId,postId } = req.params;
-        const { ...name } = req.body
-        const { name1,name2 } = name
+        const { profileId, postId } = req.params;
+        const { name } = req.body;
+        let foundPost;
         Post.findByPk(+postId)
-        .then((result) => {
-            return Tag.create({ name1,name2 })
+        .then((post) => {
+            foundPost = post;
+            return Tag.create({ name });
         })
-        .then((result) => {
+        .then((tag) => {
+            return foundPost.addTag(tag);
+        })
+        .then(() => {
+            res.redirect(`/profiles/${+profileId}`);
+        })
+        .catch((err) => {
+            if (err.name === "SequelizeValidationError") {
+                err = err.errors.map((el) => {
+                    return el.message
+                })
+                ///profiles/:profileId/posts/:postId/tags/add
+                res.redirect(`/profiles/${profileId}/posts/${postId}/tags/add?errors=${err.join(';')}`)
+            }else{
+                //console.log(err);
+                res.send(err)
+            }
+        });
+    }
+
+    static deletePost(req,res){
+        const { profileId,postId } = req.params;
+        Post.destroy({ where: { id: +postId } })
+        .then ((result) => {
             res.redirect(`/profiles/${+profileId}`)
         })
         .catch((err) => {
             console.log(err);
-            res.send(err)
-        })
-    }
-
-    static deletePost(req,res){
-        
+            res.send(err);
+        });
     }
 
 }
 
 module.exports = Controller
-// router.get('/profiles', Controller.showAllProfile)
-// router.get('/profiles/:profileId', Controller.showProfilePost)
-// router.get('/profiles/:profileId/posts/add', Controller.addPost)
-// router.post('/profiles/:profileId/posts/add', Controller.createPost)
-// router.get('/profiles/:profileId/posts/:postId/edit', Controller.editPostForm)
-// router.post('/profiles/:profileId/posts/:postId/edit', Controller.updatePost)
-// router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTags)
-// router.post('/profiles/:profileId/posts/:postId/tags/add', Controller.createTags)
-// router.get('/profiles/:profileId/posts/:postId/delete', Controller.deletePost)

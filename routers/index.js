@@ -19,11 +19,13 @@ router.get('/', (req, res) => {
 
 router.get('/profiles', Controller.showAllProfile)
 router.get('/profiles/:profileId', Controller.showProfilePost)
-router.get('/profiles/:profileId/posts/add', Controller.addPost)
+router.get('/profiles/:profileId/edit', Controller.editProfileForm)
+router.post('/profiles/:profileId/edit', Controller.updateProfile)
+router.get('/profiles/:profileId/posts/add', Controller.addPostForm)
 router.post('/profiles/:profileId/posts/add', Controller.createPost)
-router.get('/profiles/:profileId/posts/:postId/edit', Controller.editPostForm)
-router.post('/profiles/:profileId/posts/:postId/edit', Controller.updatePost)
-router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTags)
+// router.get('/profiles/:profileId/posts/:postId/edit', Controller.editPostForm)
+// router.post('/profiles/:profileId/posts/:postId/edit', Controller.updatePost)
+router.get('/profiles/:profileId/posts/:postId/tags/add', Controller.addTagsForm)
 router.post('/profiles/:profileId/posts/:postId/tags/add', Controller.createTags)
 router.get('/profiles/:profileId/posts/:postId/delete', Controller.deletePost)
 
