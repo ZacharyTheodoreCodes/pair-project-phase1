@@ -28,9 +28,9 @@ class Controller{
         .then((profileData) => {
             profileData.dataValues.fullName = profileData.fullName
             profileData.dataValues.genderPronoun = Profile.genderPronoun(profileData.dataValues.gender)
-            let gender = profileData.dataValues.genderPronoun
+
             // res.send(profileData)
-            res.render("showProfilePost",{profileData, gender})
+
         })
         .catch((err) => {
             res.send(err)
