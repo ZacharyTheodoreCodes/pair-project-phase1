@@ -1,26 +1,20 @@
-/**
- * npx sequelize-cli model:generate --name User --attributes email:string,password:string,role:string
- * npx sequelize-cli model:generate --name Profile --attributes username:string,bio:string,UserId:integer
- * npx sequelize-cli model:generate --name Post --attributes ProfileId:integer,imgUrl:string
- * npx sequelize-cli model:generate --name Tag --attributes name:string
- * npx sequelize-cli model:generate --name PostTag --attributes PostId:integer,TagId:string
- * 
- * 
- * 
- * 
- * npx sequelize-cli migration:generate --name addCaptionColumnToPost
- * 
- * npx sequelize-cli seed:generate --name profile-seed
- * 
- */
-
 const express = require('express')
 const app = express()
 const port = 3000
 const router = require('./routers')
+//const { Post, Tag, PostTag } = require('./models')
 
 // app.get('/', (req, res) => {
-//   res.send('Hello World!')
+//   Tag
+//   .findAll({
+//     include : {model : Post}
+//   })
+//   .then((result) => {
+//     res.send(result)
+//   })
+//   .catch((err) => {
+//     res.send(err)
+//   })
 // })
 
 app.set('view engine', 'ejs')

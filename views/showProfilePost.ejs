@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <pre><%= JSON.stringify(profileData,null,4) %></pre>
+    <h3><%= `${profileData.dataValues.genderPronoun} ${profileData.fullName}` %></h3>
+    <h4>Posts</h4>
+    <a href="">Add New Post</a>
+    <table>
+        <tr>
+            <th>Image</th>
+            <th>Caption</th>
+            <th>Published At</th>
+            <th>Tags</th>
+            <th>Action</th>
+        </tr>
+
+        <% profileData.Posts.forEach(post => { %>
+            <tr>
+                <td>
+                    <img src="<%=post.imgUrl%>" alt="img">
+                </td>
+                <td><%=post.caption%></td>
+                <td><%=post.createdAt%></td>
+                <td><%=post.tags%></td>
+                <td>
+                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/edit">Add Tag</a>
+                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/edit">Edit</a>
+                    <a href="/stores/<%=storeFind.id%>/employees/<%=element.id%>/delete">Delete</a>
+                </td>
+            </tr>
+            <% }); %>
+    </table>
+</body>
+</html>

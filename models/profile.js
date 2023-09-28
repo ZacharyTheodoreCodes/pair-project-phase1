@@ -14,6 +14,28 @@ module.exports = (sequelize, DataTypes) => {
       Profile.belongsTo(models.User)
       Profile.hasMany(models.Post)
     }
+
+    get fullName(){
+      return `${this.firstName} ${this.lastName}`
+    }
+
+    static genderPronoun(gender){
+      if (gender == "Female"){
+        return "Mrs"
+      }else if (gender == "Male"){
+        return "Mr"
+      }
+    }
+
+    hiddenPhoneNumber(){
+        if (typeof this.phone !== 'string' || this.phone.length < 2) {
+          return this.phone;
+        }
+        const countryCode = this.phone.slice(0, 3);
+        const rest = this.phone.slice(3).replace(/\d/g, '*');
+        return `${countryCode}${rest}`;
+    }
+
   }
   Profile.init({
     firstName: DataTypes.STRING,
