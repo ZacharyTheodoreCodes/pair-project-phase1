@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+</head>
+<body class = "bg-white">
+    <br><br>
+    <form action="/stores/<%= result.id %>/employees/add" method="post">
+        <div class="d-flex justify-content-center"  style="font-size: 30px;">
+            <div class="p-2">
+                <a href="/">
+                    <button type="button" class="btn btn-md btn-primary">Home</button>
+                </a>
+            </div>
+            <div class="p-2">
+                <a href="/stores/add">
+                    <button type="button" class="btn btn-md btn-primary">Add a New Store</button>
+                </a>
+            </div>
+            <div class="p-2">
+                <a href="/employees">
+                    <button type="button" class="btn btn-md btn-primary">Employees</button>
+                </a>
+            </div>
+        </div>
+        <div>
+            <div class="d-flex justify-content-center">
+                <h1 style="font-size: 60PX;">Add Employee</h1>
+            </div>
+
+            <div class="d-flex justify-content-center">
+                <h3> Store Name: <%= result.name %></h3>
+            </div>
+
+            <br><br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">First Name</h5>
+            <div class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">
+                <input type="text" class="form-control" name="firstName" rows="1"></input>
+            </div>
+
+            <br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">Last Name</h5>
+            <div class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">
+                <input type="text" class="form-control" name="lastName" rows="1"></input>
+            </div>
+
+            <br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">Date Of Birth</h5>
+            <div class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">
+                <input type="date" class="form-control" name="dateOfBirth" />
+            </div>
+
+            <br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px" id="basic-addon1">Education</h5>
+            <div class="card" style="margin-left: 100px; margin-right: 100px;">
+                <select class="card-body" name="education">
+                    <option selected disabled>select education</option>
+                    <% const array = ["SMA", "S1", "S2", "S3"] %>
+                    <%array.forEach(element => { %>
+                    <option value="<%= element %>"><%= element %></option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px">Position</h5>
+            <div class="d-flex justify-content-left" style="margin-left: 130px; gap: 5rem;" value="Staff" name="position">
+                <label class="d-flex form-check-label" for="blankRadio3">
+                    <input class="form-check-input" type="radio" id="blankRadio3" value="Staff" aria-label="..." name="position">Staff
+                </label>
+                <label class="d flex form-check-label" for="blankRadio3">
+                    <input class="form-check-input" type="radio" id="blankRadio3" value="Supervisor" aria-label="..." name="position">Supervisor
+                </label>
+                <label class="d flex form-check-label" for="blankRadio3">
+                    <input class="form-check-input" type="radio" id="blankRadio3" value="Manager" aria-label="..." name="position">Manager
+                </label>
+                <label class="d flex form-check-label" for="blankRadio3">
+                    <input class="form-check-input" type="radio" id="blankRadio3" value="CEO" aria-label="..." name="position">CEO
+                </label>
+            </div>
+
+            <br>
+            <h5 class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">Salary</h5>
+            <div class="d-flex justify-content-left" style="margin-left: 100px; margin-right: 100px;">
+                <input type="text" class="form-control" name="salary" rows="1"></input>
+            </div>
+            <br><br>
+            <div class="d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            
+        </div>
+    </form>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+</body>
+</html>
+
+
+
+
+
+
