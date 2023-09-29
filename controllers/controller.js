@@ -43,6 +43,7 @@ class Controller{
     }
 
     static editProfileForm(req,res){
+        const { errors } = req.query;
         const id = req.session.UserId
         Profile.findOne({
             include: User,
@@ -51,7 +52,7 @@ class Controller{
             }
         })
             .then((profile) => {
-                res.render('editprofile', { profile })
+                res.render('editprofile', { profile,errors })
             })
             .catch((err) => {
                 console.log(err)
@@ -60,15 +61,22 @@ class Controller{
 
     static updateProfile(req,res){
         const id = req.session.UserId
-        //const { profileId } = req.params
+        const { profileId } = req.params
         const { firstName, lastName, phone, gender } = req.body
         Profile.update({ firstName, lastName, phone, gender }, { where: {UserId: +id}})
         .then((result) => {
             res.redirect(`/profiles`);
         })
         .catch((err) => {
-            console.log(err);
-            res.send(err)
+            if (err.name === "SequelizeValidationError") {
+                err = err.errors.map((el) => {
+                    return el.message
+                })
+                res.redirect(`/profiles/${profileId}/edit?errors=${err.join(';')}`)
+            }else{
+                //console.log(err);
+                res.send(err)
+            }
         })
     }
     

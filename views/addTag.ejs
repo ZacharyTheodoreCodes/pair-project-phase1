@@ -7,6 +7,12 @@
 </head>
 <body>
     <h1>Add New Tag</h1>
+    <%if(errors){%>
+        <% errors= errors.split(",")%> 
+        <% errors.forEach(el => { %>
+           <pre style="color:red;"><%= el %> </pre>
+        <% }) %>
+     <%}%>
     <form action="" method="post">
         <label>Add Tag</label><br>
         <input type="text" name="name"><br>

@@ -30,6 +30,12 @@
                   </header>
                  <div class="container py-4">
                 <h1>Edit Profile</h1>
+                <%if(errors){%>
+                  <% errors= errors.split(",")%> 
+                  <% errors.forEach(el => { %>
+                     <pre style="color:red;"><%= el %> </pre>
+                  <% }) %>
+               <%}%>
                 <form action="" method="post">
                     <div class="mb-3">
                     <label  class="form-label">First Name</label>

@@ -37,10 +37,62 @@ module.exports = (sequelize, DataTypes) => {
     }
   }
   Profile.init({
-    firstName: DataTypes.STRING,
-    lastName: DataTypes.STRING,
-    phone: DataTypes.STRING,
-    gender: DataTypes.STRING,
+    firstName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "First name tidak boleh kosong"
+        },
+        notNull : {
+          args: true,
+          msg: "First name tidak boleh kosong"
+        },
+      }
+    },
+    lastName: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Last name tidak boleh kosong"
+        },
+        notNull : {
+          args: true,
+          msg: "Last name tidak boleh kosong"
+        },
+      }
+    },
+    phone:{
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Phone tidak boleh kosong"
+        },
+        notNull : {
+          args: true,
+          msg: "Phone tidak boleh kosong"
+        },
+      }
+    },
+    gender: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      validate: {
+        notEmpty: {
+          args: true,
+          msg: "Gender tidak boleh kosong"
+        },
+        notNull : {
+          args: true,
+          msg: "Gender tidak boleh kosong"
+        },
+      }
+    },
     UserId: DataTypes.INTEGER
   }, {
     sequelize,
